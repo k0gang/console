@@ -57,9 +57,9 @@ public class Board extends UserManager {
 		case LOG_OUT:
 			logOut();
 			break;
-//		case PRINT_BOARD:
-//			printBoard();
-//			break;
+		case PRINT_BOARD:
+			printBoard();
+			break;
 		case POST:
 			post();
 			break;
@@ -121,6 +121,30 @@ public class Board extends UserManager {
 		System.out.println("로그아웃 되었습니다.");
 	}
 	
+	private void printBoard() {
+		for(int i=0; i<list.size(); i++) {
+			Post post = list.get(i);
+			System.out.println(i+1 + ") " + post);
+		}
+		
+		System.out.println("0) 뒤로가기");
+		int sel = inputNumber("선택");
+		
+		if(sel < 0 || sel > list.size()) {
+			System.err.println("?");
+			return;
+		}
+		
+		printText(sel);
+	}
+	
+	private void printText(int sel) {
+		Post post = list.get(sel-1);
+		
+		String text = post.getText();
+		System.out.println(text);
+	}
+	
 	private void post() {
 		if(!isLogin()) {
 			System.err.println("로그인 후 이용 가능합니다.");
@@ -134,6 +158,7 @@ public class Board extends UserManager {
 		
 		User user = findUserByIndex(log);
 		
+		list.add(post);
 		user.addPost(post);
 		board.put(user, post);
 		
