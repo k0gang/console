@@ -29,7 +29,8 @@ public class Board extends UserManager {
 	}
 
 	private void printMenu() {
-
+		if(this.log != -1)
+			printLogStatus();
 		System.out.println("1) 회원가입");
 		System.out.println("2) 로그인");
 		System.out.println("3) 로그아웃");
@@ -38,7 +39,12 @@ public class Board extends UserManager {
 		System.out.println("6) 내 게시글 보기");
 	}
 	
-
+	private void printLogStatus() {
+		String id = findIdByIndex(log);
+		
+		String message = String.format("[%s님 로그인중]",id);
+		System.out.println(message);
+	}
 
 	private void runMenu(int sel) {
 		switch (sel) {
@@ -65,6 +71,11 @@ public class Board extends UserManager {
 	
 	
 	private void join() {
+		if(isLogin()) {
+			System.err.println("로그아웃 후 이용 가능합니다.");
+			return;
+		}
+		
 		String id = inputString("id");
 		if(checkIdDupl(id)) {
 			System.err.println("이미 사용중인 id입니다.");
@@ -80,6 +91,11 @@ public class Board extends UserManager {
 	}
 	
 	private void logIn() {
+		if(isLogin()) {
+			System.err.println("이미 로그인 중입니다.");
+			return;
+		}
+		
 		String id = inputString("id");
 		String pw = inputString("pw");
 		
@@ -88,7 +104,7 @@ public class Board extends UserManager {
 			return;
 		}
 		
-		log = findIndexById(id);
+		setLog(findIndexById(id));
 		
 		String message = String.format("%s님 로그인 완료", id);
 		System.out.println(message);
@@ -112,6 +128,14 @@ public class Board extends UserManager {
 	private String inputString(String message) {
 		System.out.print(message + " : ");
 		return sc.next();
+	}
+	
+	private void setLog(int log) {
+		this.log = log;
+	}
+	
+	private boolean isLogin() {
+		return this.log == -1 ? false : true;
 	}
 
 }
