@@ -56,6 +56,7 @@ public class Board extends UserManager {
 		}
 	}
 	
+	
 	private void join() {
 		String id = inputString("id");
 		if(checkIdDupl(id)) {
