@@ -3,7 +3,7 @@ package console;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Board {
+public class Board extends UserManager {
 	Scanner sc = new Scanner(System.in);
 	public int log;
 
@@ -38,23 +38,40 @@ public class Board {
 		case JOIN:
 			join();
 			break;
-		case LOG_IN:
-			logIn();
-			break;
-		case LOG_OUT:
-			logOut();
-			break;
-		case PRINT_BOARD:
-			printBoard();
-			break;
-		case POST:
-			post();
-			break;
-		case MY_POST:
-			myPost();
-			break;
+//		case LOG_IN:
+//			logIn();
+//			break;
+//		case LOG_OUT:
+//			logOut();
+//			break;
+//		case PRINT_BOARD:
+//			printBoard();
+//			break;
+//		case POST:
+//			post();
+//			break;
+//		case MY_POST:
+//			myPost();
+//			break;
 		}
 	}
+	
+	private void join() {
+		String id = inputString("id");
+		if(checkIdDupl(id)) {
+			System.err.println("이미 사용중인 id입니다.");
+			return;
+		}
+		String pw = inputString("pw");
+		
+		User user = new User(id,pw);
+		addUser(user);
+		
+		String message = String.format("%s님 회원가입 완료", id);
+		System.out.println(message);
+	}
+	
+
 
 	private int inputNumber(String message) {
 		int number = -1;
@@ -67,6 +84,11 @@ public class Board {
 			System.err.println("숫자만 입력가능");
 		}
 		return number;
+	}
+	
+	private String inputString(String message) {
+		System.out.print(message + " : ");
+		return sc.next();
 	}
 
 }
