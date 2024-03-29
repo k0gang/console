@@ -1,13 +1,17 @@
 package console;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Board extends UserManager {
 	Scanner sc = new Scanner(System.in);
-	public int log;
+	public int log = -1;
 
 	ArrayList<Post> list = new ArrayList<>();
+
+	Map<User, Post> board = new HashMap<User, Post>();
 
 	private final int JOIN = 1;
 	private final int LOG_IN = 2;
@@ -25,6 +29,7 @@ public class Board extends UserManager {
 	}
 
 	private void printMenu() {
+
 		System.out.println("1) 회원가입");
 		System.out.println("2) 로그인");
 		System.out.println("3) 로그아웃");
@@ -32,15 +37,17 @@ public class Board extends UserManager {
 		System.out.println("5) 게시글 작성");
 		System.out.println("6) 내 게시글 보기");
 	}
+	
+
 
 	private void runMenu(int sel) {
 		switch (sel) {
 		case JOIN:
 			join();
 			break;
-//		case LOG_IN:
-//			logIn();
-//			break;
+		case LOG_IN:
+			logIn();
+			break;
 //		case LOG_OUT:
 //			logOut();
 //			break;
@@ -69,6 +76,21 @@ public class Board extends UserManager {
 		addUser(user);
 		
 		String message = String.format("%s님 회원가입 완료", id);
+		System.out.println(message);
+	}
+	
+	private void logIn() {
+		String id = inputString("id");
+		String pw = inputString("pw");
+		
+		if(!checkIdAndPw(id,pw)) {
+			System.err.println("회원정보가 일치하지 않습니다");
+			return;
+		}
+		
+		log = findIndexById(id);
+		
+		String message = String.format("%s님 로그인 완료", id);
 		System.out.println(message);
 	}
 	
