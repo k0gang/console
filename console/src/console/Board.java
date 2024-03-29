@@ -54,9 +54,9 @@ public class Board extends UserManager {
 		case LOG_IN:
 			logIn();
 			break;
-//		case LOG_OUT:
-//			logOut();
-//			break;
+		case LOG_OUT:
+			logOut();
+			break;
 //		case PRINT_BOARD:
 //			printBoard();
 //			break;
@@ -104,13 +104,24 @@ public class Board extends UserManager {
 			return;
 		}
 		
-		setLog(findIndexById(id));
+		this.log = findIndexById(id);
 		
 		String message = String.format("%s님 로그인 완료", id);
 		System.out.println(message);
 	}
 	
-
+	private void logOut() {
+		if(!isLogin()) {
+			System.err.println("로그아웃 상태입니다.");
+			return;
+		}
+		
+		this.log = -1;
+		
+		System.out.println("로그아웃 되었습니다.");
+	}
+	
+	
 
 	private int inputNumber(String message) {
 		int number = -1;
@@ -128,10 +139,6 @@ public class Board extends UserManager {
 	private String inputString(String message) {
 		System.out.print(message + " : ");
 		return sc.next();
-	}
-	
-	private void setLog(int log) {
-		this.log = log;
 	}
 	
 	private boolean isLogin() {
