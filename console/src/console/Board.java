@@ -11,7 +11,7 @@ public class Board extends UserManager {
 
 	ArrayList<Post> list = new ArrayList<>();
 
-	Map<User, Post> board = new HashMap<User, Post>();
+	Map<User, ArrayList<Post>> userBoard = new HashMap<User, ArrayList<Post>>();
 
 	private final int JOIN = 1;
 	private final int LOG_IN = 2;
@@ -20,6 +20,10 @@ public class Board extends UserManager {
 	private final int POST = 5;
 	private final int MY_POST = 6;
 
+	private final int DELETE = 1;
+	private final int UPDATE = 2;
+	private final int VIEW = 3;
+	
 	public void run() {
 		while (true) {
 			printMenu();
@@ -63,9 +67,9 @@ public class Board extends UserManager {
 		case POST:
 			post();
 			break;
-//		case MY_POST:
-//			myPost();
-//			break;
+		case MY_POST:
+			myPost();
+			break;
 		}
 	}
 	
@@ -85,6 +89,7 @@ public class Board extends UserManager {
 		
 		User user = new User(id,pw);
 		addUser(user);
+		userBoard.put(user, user.list);
 		
 		String message = String.format("%s님 회원가입 완료", id);
 		System.out.println(message);
@@ -135,6 +140,9 @@ public class Board extends UserManager {
 			return;
 		}
 		
+		if(sel == 0)
+			return;
+		
 		printText(sel);
 	}
 	
@@ -160,9 +168,64 @@ public class Board extends UserManager {
 		
 		list.add(post);
 		user.addPost(post);
-		board.put(user, post);
+		userBoard.put(user, user.list);
 		
 		System.out.println("게시글 작성 완료");
+	}
+	
+	private void myPost() {
+		if(!isLogin()) {
+			System.err.println("로그인 후 이용가능합니다.");
+			return;
+		}
+		
+		User user = findUserByIndex(log);
+		
+		user.printPost();
+		
+		printSubMenu();
+		int sel = inputNumber("입력");
+		
+		runSubMenu(sel);
+	}
+	
+	private void printSubMenu() {
+		System.out.println("1) 삭제");
+		System.out.println("2) 수정");
+		System.out.println("3) 조회");
+	}
+	
+	private void runSubMenu(int sel) {
+		switch(sel) {
+		case DELETE:
+			deletePost();
+			break;
+//		case UPDATE:
+//			updatePost();
+//			break;
+//		case VIEW:
+//			viewPost();
+//			break;
+		}
+	}
+	
+	private void deletePost() {
+		User user = findUserByIndex(log);
+		
+		int sel = inputNumber("삭제할 게시글 번호 입력");
+		
+		if(sel < 1 || sel >user.list.size()) {
+			System.err.println("?");
+			return;
+		}
+		
+		Post post = user.findPostByIndex(sel-1);
+		
+		user.list.remove(post);
+		userBoard.put(user, user.list);
+		list.remove(post);
+		
+		System.out.println("게시글 삭제 완료");
 	}
 	
 
