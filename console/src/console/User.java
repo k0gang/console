@@ -20,4 +20,8 @@ public class User {
 		return this.pw;
 	}
 	
+	public void addPost(Post post) {
+		list.add(post);
+	}
+	
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Board extends UserManager {
-	Scanner sc = new Scanner(System.in);
+	private Scanner sc = new Scanner(System.in);
 	public int log = -1;
 
 	ArrayList<Post> list = new ArrayList<>();
@@ -60,9 +60,9 @@ public class Board extends UserManager {
 //		case PRINT_BOARD:
 //			printBoard();
 //			break;
-//		case POST:
-//			post();
-//			break;
+		case POST:
+			post();
+			break;
 //		case MY_POST:
 //			myPost();
 //			break;
@@ -121,6 +121,24 @@ public class Board extends UserManager {
 		System.out.println("로그아웃 되었습니다.");
 	}
 	
+	private void post() {
+		if(!isLogin()) {
+			System.err.println("로그인 후 이용 가능합니다.");
+			return;
+		}
+		
+		String title = inputString("title");
+		String text = inputString("text");
+		
+		Post post = new Post(title, text);
+		
+		User user = findUserByIndex(log);
+		
+		user.addPost(post);
+		board.put(user, post);
+		
+		System.out.println("게시글 작성 완료");
+	}
 	
 
 	private int inputNumber(String message) {

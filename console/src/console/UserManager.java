@@ -32,9 +32,17 @@ public class UserManager {
 		return -1;
 	}
 	
+	public String findIdByIndex(int log) {
+		return list.get(log).getId();
+	}
+	
 	public void addUser(User user) {
 		list.add(user);
 	} 
+	
+	public User findUserByIndex(int log) {
+		return list.get(log);
+	}
 	
 }
 
