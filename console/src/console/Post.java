@@ -12,6 +12,10 @@ public class Post {
 		return this.text;
 	}
 	
+	public String getTitle() {
+		return this.title;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("%s",title);

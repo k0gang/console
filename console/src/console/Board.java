@@ -22,7 +22,10 @@ public class Board extends UserManager {
 
 	private final int DELETE = 1;
 	private final int UPDATE = 2;
-	private final int VIEW = 3;
+	private final int SEARCH = 3;
+	
+	private final int UPDATE_TITLE = 1;
+	private final int UPDATE_TEXT = 2;
 	
 	public void run() {
 		while (true) {
@@ -200,10 +203,10 @@ public class Board extends UserManager {
 		case DELETE:
 			deletePost();
 			break;
-//		case UPDATE:
-//			updatePost();
-//			break;
-//		case VIEW:
+		case UPDATE:
+			updatePost();
+			break;
+//		case SEARCH:
 //			viewPost();
 //			break;
 		}
@@ -214,10 +217,8 @@ public class Board extends UserManager {
 		
 		int sel = inputNumber("삭제할 게시글 번호 입력");
 		
-		if(sel < 1 || sel >user.list.size()) {
-			System.err.println("?");
+		if(!checkSel(sel))
 			return;
-		}
 		
 		Post post = user.findPostByIndex(sel-1);
 		
@@ -228,6 +229,94 @@ public class Board extends UserManager {
 		System.out.println("게시글 삭제 완료");
 	}
 	
+	private void updatePost() {
+		User user = findUserByIndex(log);
+		
+		int sel = inputNumber("수정할 게시글 번호 입력");
+		
+		if(!checkSel(sel))
+			return;
+		
+		runUpdateSubMenu(sel);
+		
+		String text = inputString("내용");
+		
+		Post post = user.findPostByIndex(sel-1);
+		
+		String title = post.getTitle();
+		
+		Post updatePost = new Post(title,text);
+		
+		user.list.set(sel-1, updatePost);
+		userBoard.put(user, user.list);
+		
+		int index = list.indexOf(post);
+		list.set(index, updatePost);
+	}
+	
+	private void runUpdateSubMenu(int index) {
+		System.out.println("1)제목 수정");
+		System.out.println("2)내용 수정");
+		
+		int sel = inputNumber("입력");
+		
+		if(sel == UPDATE_TITLE)
+			updateTitle(index);
+		else if(sel == UPDATE_TEXT)
+			updateText(index);
+	}
+	
+	private void updateTitle(int index) {
+		User user = findUserByIndex(log);
+		
+		String title = inputString("제목");
+		
+		Post post = user.findPostByIndex(index-1);
+		
+		String text = post.getText();
+		
+		Post updatePost = new Post(title,text);
+		
+		user.list.set(index-1, updatePost);
+		userBoard.put(user, user.list);
+		
+		int idx = list.indexOf(post);
+		list.set(idx, updatePost);
+		
+		System.out.println("제목 수정 완료");
+	}
+	
+	private void updateText(int index) {
+		User user = findUserByIndex(log);
+		
+		String text = inputString("내용");
+		
+		Post post = user.findPostByIndex(index-1);
+		
+		String title = post.getTitle();
+		
+		Post updatePost = new Post(title,text);
+		
+		user.list.set(index-1, updatePost);
+		userBoard.put(user, user.list);
+		
+		int idx = list.indexOf(post);
+		list.set(idx, updatePost);
+		
+		System.out.println("내용 수정 완료");
+	}
+	
+	
+	private boolean checkSel(int sel) {
+		User user = findUserByIndex(log);
+		
+		if(sel < 1 || sel >user.list.size()) {
+			System.err.println("?");
+			return false;
+		}
+		
+		return true;
+	}
 
 	private int inputNumber(String message) {
 		int number = -1;
